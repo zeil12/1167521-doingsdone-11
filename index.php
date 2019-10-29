@@ -120,17 +120,11 @@ $tasks = [
 
                 <table class="tasks">
                  <?php foreach ($tasks as $item): ?>
-                    <?php if ($show_complete_tasks == 0 && $item["completed"]): ?>
+                    <?php if ($show_complete_tasks === 0 && $item["completed"]): ?>
                       <?php continue; ?>
                     <?php endif; ?>
-                      <tr class="tasks__item task task--completed">
-                      <?php if ($item["completed"]): ?>
-                         task--completed
-                      <?php endif; ?>
+                      <tr class="tasks__item task <?php if ($item["completed"]): ?>task--completed<?php endif; ?>">
                         <td class="task__select">
-                        <?php if ($item["completed"]): ?>
-                          checked
-                        <?php endif; ?>
                           <label class="checkbox task__checkbox">
                             <input class="checkbox__input visually-hidden" type="checkbox" checked>
                             <span class="checkbox__text"><?= $item["task"]; ?></span>
