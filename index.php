@@ -1,6 +1,45 @@
 <?php
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+$categories = ["Входящие", "Учёба", "Работа", "Домашние дела", "Авто"];
+$tasks = [
+    [
+        "task" => "Собеседование в IT компании",
+        "date" => "01.12.2019",
+        "category" => "Работа",
+        "completed" => false
+    ],
+    [
+        "task" => "Выполнить тестовое задание",
+        "date" => "25.12.2019",
+        "category" => "Работа",
+        "completed" => false
+    ],
+    [
+        "task" => "Сделать задание первого раздела",
+        "date" => "21.12.2019",
+        "category" => "Учёба",
+        "completed" => true
+    ],
+    [
+        "task" => "Встреча с другом",
+        "date" => "22.12.2019",
+        "category" => "Входящие",
+        "completed" => false
+    ],
+    [
+        "task" => "Купить корм для кота",
+        "date" => null,
+        "category" => "Домашние дела",
+        "completed" => false
+    ],
+    [
+        "task" => "Заказать пиццу",
+        "date" => null,
+        "category" => "Домашние дела",
+        "completed" => false
+    ]
+];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -42,10 +81,12 @@ $show_complete_tasks = rand(0, 1);
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
+                    <?php foreach ($categories as $item): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#">Название проекта</a>
+                            <a class="main-navigation__list-item-link" href="#"><?= $item; ?></a>
                             <span class="main-navigation__list-item-count">0</span>
                         </li>
+                    <?php endforeach; ?>
                     </ul>
                 </nav>
 
@@ -78,33 +119,21 @@ $show_complete_tasks = rand(0, 1);
                 </div>
 
                 <table class="tasks">
-                    <tr class="tasks__item task">
-                        <td class="task__select">
-                            <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                <span class="checkbox__text">Сделать главную страницу Дела в порядке</span>
-                            </label>
-                        </td>
-
-                        <td class="task__file">
-                            <a class="download-link" href="#">Home.psd</a>
-                        </td>
-
-                        <td class="task__date"></td>
-                    </tr>
-                    <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
-                    <?php if ($show_complete_tasks == 1): ?>
-                      <tr class="tasks__item task task--completed">
+                 <?php foreach ($tasks as $item): ?>
+                    <?php if ($show_complete_tasks === 0 && $item["completed"]): ?>
+                      <?php continue; ?>
+                    <?php endif; ?>
+                      <tr class="tasks__item task <?php if ($item["completed"]): ?>task--completed<?php endif; ?>">
                         <td class="task__select">
                           <label class="checkbox task__checkbox">
                             <input class="checkbox__input visually-hidden" type="checkbox" checked>
-                            <span class="checkbox__text">Записаться на интенсив "Базовый PHP"</span>
+                            <span class="checkbox__text"><?= $item["task"]; ?></span>
                           </label>
                         </td>
-                        <td class="task__date">10.10.2019</td>
+                        <td class="task__date"><?= $item["date"]; ?></td>
                         <td class="task__controls"></>
                       </tr>
-                    <?php endif; ?>
+                 <?php endforeach; ?>
                 </table>
             </main>
         </div>
