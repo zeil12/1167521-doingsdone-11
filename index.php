@@ -40,6 +40,20 @@ $tasks = [
         "completed" => false
     ]
 ];
+
+function count_tasks(array $tasks, string $category): int
+{
+    $count = 0;
+    
+    foreach ($tasks as $item) {
+        
+        if ($item["category"] === $category) {
+          $count ++;
+        }
+    }
+    
+    return $count;
+};
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -84,7 +98,7 @@ $tasks = [
                     <?php foreach ($categories as $item): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?= $item; ?></a>
-                            <span class="main-navigation__list-item-count">0</span>
+                            <span class="main-navigation__list-item-count"><?=count_tasks($tasks, $item);?></span>
                         </li>
                     <?php endforeach; ?>
                     </ul>
