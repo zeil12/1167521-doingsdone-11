@@ -45,7 +45,11 @@
                     <?php if ($show_complete_tasks === 0 && $item["completed"]): ?>
                       <?php continue; ?>
                     <?php endif; ?>
-                      <tr class="tasks__item task <?php if ($item["completed"]): ?>task--completed<?php endif; ?>">
+                      <tr class="tasks__item task <?php if ($item["completed"]): ?>task--completed<?php endif; ?>
+                      <?php $time = task_deadline($item["date"]); 
+                      if ($time <=24): ?>task--important
+                      <?php endif; ?>
+                      ">
                         <td class="task__select">
                           <label class="checkbox task__checkbox">
                             <input class="checkbox__input visually-hidden" type="checkbox" checked>
