@@ -6,7 +6,7 @@ $categories = ["Входящие", "Учёба", "Работа", "Домашни
 $tasks = [
     [
         "task" => "Собеседование в IT компании",
-        "date" => "01.12.2019",
+        "date" => "04.11.2019",
         "category" => "Работа",
         "completed" => false
     ],
@@ -50,13 +50,23 @@ function count_tasks(array $tasks, string $category): int
         
         if ($item["category"] === $category) {
           $count ++;
-        }
+        } 
     }
     
     return $count;
-};
+}
 
+function is_task_urgent(?string $date): int
+{
+    $sec_in_hours = 3600;
+    $end_ts = strtotime($date);
+    $ts_diff = $end_ts - time();
+    $time = floor($ts_diff / $sec_in_hours);
 
+    return $time <=24;
+    
+}
+    
 $page_content = include_template('main.php', [
     'show_complete_tasks' => $show_complete_tasks,
     'tasks' => $tasks,
