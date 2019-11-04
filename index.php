@@ -56,14 +56,15 @@ function count_tasks(array $tasks, string $category): int
     return $count;
 }
 
-function task_deadline($date): int
+function is_task_urgent(?string $date): int
 {
     $sec_in_hours = 3600;
     $end_ts = strtotime($date);
     $ts_diff = $end_ts - time();
     $time = floor($ts_diff / $sec_in_hours);
+
+    return $time <=24;
     
-    return $time;
 }
     
 $page_content = include_template('main.php', [

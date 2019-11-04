@@ -46,8 +46,7 @@
                       <?php continue; ?>
                     <?php endif; ?>
                       <tr class="tasks__item task <?php if ($item["completed"]): ?>task--completed<?php endif; ?>
-                      <?php $time = task_deadline($item["date"]); 
-                      if ($time <=24): ?>task--important
+                      <?php if (is_task_urgent($item["date"])): ?>task--important
                       <?php endif; ?>
                       ">
                         <td class="task__select">
