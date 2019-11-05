@@ -63,7 +63,7 @@ function is_task_urgent(?string $date): int
     $ts_diff = $end_ts - time();
     $time = floor($ts_diff / $sec_in_hours);
 
-    return $time <=24;
+    return $time <= 24;
     
 }
     
