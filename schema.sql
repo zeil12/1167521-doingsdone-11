@@ -6,10 +6,12 @@ USE doingsdone;
 
 CREATE TABLE project (
     id         INT AUTO_INCREMENT PRIMARY KEY,
-    name       VARCHAR(50) NOT NULL
+    title      VARCHAR(50) NOT NULL,
+    user_id    INT NOT NULL,
+    FOREIGN KEY (user_id)  REFERENCES user (id)
 );
 
-CREATE INDEX pj_name ON project(name);
+CREATE INDEX pj_name ON project(title);
 
 CREATE TABLE task (
     id         INT AUTO_INCREMENT PRIMARY KEY,
@@ -17,7 +19,11 @@ CREATE TABLE task (
     status     INT NOT NULL,
     tsk_name   VARCHAR(50) NOT NULL,
     file_link  VARCHAR(100),
-    deadline   TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
+    deadline   TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
+    user_id    INT NOT NULL,
+    project_id    INT NOT NULL,
+    FOREIGN KEY (user_id)     REFERENCES user (id),
+    FOREIGN KEY (project_id)  REFERENCES project (id)
 );
 
 CREATE INDEX cr_date ON task(crn_date);
