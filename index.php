@@ -2,53 +2,42 @@
 require_once('helpers.php');
 
 $show_complete_tasks = rand(0, 1);
-$categories = ["Входящие", "Учёба", "Работа", "Домашние дела", "Авто"];
-$tasks = [
-    [
-        "task" => "Собеседование в IT компании",
-        "date" => "04.11.2019",
-        "category" => "Работа",
-        "completed" => false
-    ],
-    [
-        "task" => "Выполнить тестовое задание",
-        "date" => "25.12.2019",
-        "category" => "Работа",
-        "completed" => false
-    ],
-    [
-        "task" => "Сделать задание первого раздела",
-        "date" => "21.12.2019",
-        "category" => "Учёба",
-        "completed" => true
-    ],
-    [
-        "task" => "Встреча с другом",
-        "date" => "22.12.2019",
-        "category" => "Входящие",
-        "completed" => false
-    ],
-    [
-        "task" => "Купить корм для кота",
-        "date" => null,
-        "category" => "Домашние дела",
-        "completed" => false
-    ],
-    [
-        "task" => "Заказать пиццу",
-        "date" => null,
-        "category" => "Домашние дела",
-        "completed" => false
-    ]
-];
 
-function count_tasks(array $tasks, string $category): int
+$con = mysqli_connect('127.0.0.1', 'root', '', 'doingsdone');
+if (!$con) {
+    print("Ошибка соединения: " . mysqli_connect_error());
+    exit();
+}
+mysqli_set_charset($con, "utf8");
+
+$sql = "SELECT id, title FROM project WHERE user_id = 2";
+$result = mysqli_query($con, $sql);
+
+if (!$result) {
+    $error = mysqli_error($con);
+    print("MySQL error: ". $error);
+}
+
+$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = 2";
+$result = mysqli_query($con, $sql);
+
+if (!$result) {
+    $error = mysqli_error($con);
+    print("MySQL error: ". $error);
+}
+
+$tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+function count_tasks(array $tasks, $categories): int
 {
     $count = 0;
     
     foreach ($tasks as $item) {
         
-        if ($item["category"] === $category) {
+        if ($item["project_id"] === $categories["id"]) {
           $count ++;
         } 
     }
@@ -75,7 +64,8 @@ $page_content = include_template('main.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => "Дела в порядке"
+    'title' => "Дела в порядке",
+    'user'  => "Jack"
 ]);
 
 print($layout_content);
