@@ -1,65 +1,31 @@
 <?php
 require_once('helpers.php');
+require('functions.php');
 
 $show_complete_tasks = rand(0, 1);
 
-$con = mysqli_connect('127.0.0.1', 'root', '', 'doingsdone');
-if (!$con) {
+$connect = mysqli_connect('127.0.0.1', 'root', '', 'doingsdone');
+if (!$connect) {
     print("Ошибка соединения: " . mysqli_connect_error());
     exit();
 }
-mysqli_set_charset($con, "utf8");
+mysqli_set_charset($connect, "utf8");
 
-$sql = "SELECT id, title FROM project WHERE user_id = 2";
-$result = mysqli_query($con, $sql);
+$id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
 
-if (!$result) {
-    $error = mysqli_error($con);
-    print("MySQL error: ". $error);
-}
+$categories = allProjects($connect);
 
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-$sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = 2";
-$result = mysqli_query($con, $sql);
-
-if (!$result) {
-    $error = mysqli_error($con);
-    print("MySQL error: ". $error);
-}
-
-$tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-
-function count_tasks(array $tasks, $categories): int
-{
-    $count = 0;
-    
-    foreach ($tasks as $item) {
-        
-        if ($item["project_id"] === $categories["id"]) {
-          $count ++;
-        } 
-    }
-    
-    return $count;
-}
-
-function is_task_urgent(?string $date): int
-{
-    $sec_in_hours = 3600;
-    $end_ts = strtotime($date);
-    $ts_diff = $end_ts - time();
-    $time = floor($ts_diff / $sec_in_hours);
-
-    return $time <= 24;
-    
-}
+if (isset($id)) {
+    $tasks = currentTask($connect, $id);
+} else {
+    $tasks = allTasks($connect);
+};
     
 $page_content = include_template('main.php', [
     'show_complete_tasks' => $show_complete_tasks,
     'tasks' => $tasks,
-    'categories' => $categories
+    'categories' => $categories,
+    'id' => $id
 ]);
 
 $layout_content = include_template('layout.php', [

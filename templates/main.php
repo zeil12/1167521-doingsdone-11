@@ -5,7 +5,7 @@
                     <ul class="main-navigation__list">
                     <?php foreach ($categories as $item): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#"><?=htmlspecialchars($item['title']); ?></a>
+                            <a class="main-navigation__list-item-link <?php if($id == $item["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$item["id"]?>"><?=htmlspecialchars($item["title"]);?></a>
                             <span class="main-navigation__list-item-count"><?=count_tasks($tasks, $item);?></span>
                         </li>
                     <?php endforeach; ?>
