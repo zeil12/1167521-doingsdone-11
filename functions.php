@@ -2,42 +2,45 @@
 
 function allProjects($connect) {
     $sql = "SELECT id, title FROM project WHERE user_id = 2";
-$result = mysqli_query($connect, $sql);
-if (!$result) {
-    $error = mysqli_error($connect);
-    print("MySQL error: ". $error);
-}
+    $result = mysqli_query($connect, $sql);
 
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+      if (!$result) {
+         $error = mysqli_error($connect);
+         print("MySQL error: ". $error);
+      }
 
-return $categories;
+    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $categories;
 
 };
 
 function allTasks($connect) {
-$sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = 2";
-$result = mysqli_query($connect, $sql);
-if (!$result) {
-    $error = mysqli_error($connect);
-    print("MySQL error: ". $error);
-}
+    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = 2";
+    $result = mysqli_query($connect, $sql);
 
-$tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+      if (!$result) {
+        $error = mysqli_error($connect);
+        print("MySQL error: ". $error);
+     }
 
-return $tasks;
+    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $tasks;
 
 };
 
 function currentTask ($connect, $project_id) {
-$sql = "SELECT id, task_name, deadline, user_id, project_id status FROM task WHERE user_id = 2 AND project_id = ?";
-$stmt = mysqli_prepare($connect, $sql);
+    $sql = "SELECT id, task_name, deadline, user_id, project_id status FROM task WHERE user_id = 2  AND project_id = ?";
+    $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, 'i', $project_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    if (!$result) {
-        $error = mysqli_error($connect);
-        print("MySQL error: ". $error);
-    }
+    
+        if (!$result) {
+           $error = mysqli_error($connect);
+           print("MySQL error: ". $error);
+        }
 
     $current_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -45,7 +48,7 @@ $stmt = mysqli_prepare($connect, $sql);
 
 };
 
-function count_tasks(array $tasks, $categories): int
+function count_tasks($tasks, $categories): int
 {
     $count = 0;
     
@@ -58,6 +61,23 @@ function count_tasks(array $tasks, $categories): int
     
     return $count;
 };
+
+function idCheck($connect, $id)
+{
+    $sql = "SELECT id FROM  project WHERE id = ?";
+    $stmt = mysqli_prepare($connect, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $list = mysqli_fetch_all($result);
+    
+       if (empty($list)) {
+        return false;
+    }
+    
+    return true;
+};
+
 
 function is_task_urgent(?string $date): int
 {
