@@ -1,17 +1,18 @@
 <?php
 
 function allProjects($connect) {
-    $sql = "SELECT id, title FROM project WHERE user_id = 2";
+    $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
+    LEFT JOIN task t ON t.project_id = p.id WHERE p.user_id = 2 GROUP BY p.id";
     $result = mysqli_query($connect, $sql);
 
       if (!$result) {
          $error = mysqli_error($connect);
-         print("MySQL error: ". $error);
+         print("MySQL error: " . $error);
       }
 
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    return $categories;
+    return $projects;
 
 };
 
@@ -31,7 +32,7 @@ function allTasks($connect) {
 };
 
 function currentTask ($connect, $project_id) {
-    $sql = "SELECT id, task_name, deadline, user_id, project_id status FROM task WHERE user_id = 2  AND project_id = ?";
+    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = 2  AND project_id = ?";
     $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, 'i', $project_id);
     mysqli_stmt_execute($stmt);
@@ -48,19 +49,24 @@ function currentTask ($connect, $project_id) {
 
 };
 
-function count_tasks($tasks, $projects, $id): int
+function count_tasks($tasks, $projects, $show_complete_tasks):int
 {
     $count = 0;
     
     foreach ($tasks as $item) {
         
-        if ($item["project_id"] === $projects["id"] || isset($id)) {
-          $count ++;
-        } 
+        if ($item["project_id"] == $projects["id"]) {
+            if ($item['status']==0) {
+                $count++; 
+            } elseif ($item['status']==1 && $show_complete_tasks==1) { 
+                $count++; 
+            }
+        }
     }
     
+    
     return $count;
-};
+}; 
 
 function idCheck($connect, $id)
 {
