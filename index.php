@@ -13,7 +13,7 @@ mysqli_set_charset($connect, "utf8");
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
 
-$categories = allProjects($connect);
+$projects = allProjects($connect);
 
 if (isset($id)) {
     $tasks = currentTask($connect, $id);
@@ -25,7 +25,7 @@ if (idCheck($connect, $id) || !isset($id)) {
 $page_content = include_template('main.php', [
     'show_complete_tasks' => $show_complete_tasks,
     'tasks' => $tasks,
-    'categories' => $categories,
+    'projects' => $projects,
     'id' => $id
 ]);
 

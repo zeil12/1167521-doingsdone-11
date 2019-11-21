@@ -48,13 +48,13 @@ function currentTask ($connect, $project_id) {
 
 };
 
-function count_tasks($tasks, $categories): int
+function count_tasks($tasks, $projects, $id): int
 {
     $count = 0;
     
     foreach ($tasks as $item) {
         
-        if ($item["project_id"] === $categories["id"]) {
+        if ($item["project_id"] === $projects["id"] || isset($id)) {
           $count ++;
         } 
     }

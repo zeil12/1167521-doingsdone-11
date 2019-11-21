@@ -3,10 +3,10 @@
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                    <?php foreach ($categories as $item): ?>
+                    <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if($id == $item["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$item["id"]?>"><?=htmlspecialchars($item["title"]);?></a>
-                            <span class="main-navigation__list-item-count"><?=count_tasks($tasks, $item);?></span>
+                            <a class="main-navigation__list-item-link <?php if($id == $project["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
+                            <span class="main-navigation__list-item-count"><?=count_tasks($tasks, $project, $id);?></span>
                         </li>
                     <?php endforeach; ?>
                     </ul>
