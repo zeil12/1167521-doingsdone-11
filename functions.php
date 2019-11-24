@@ -2,7 +2,7 @@
 
 function currentProjects($connect) {
     $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
-    LEFT JOIN task t ON t.project_id = p.id WHERE p.user_id = 2 GROUP BY p.id";
+    LEFT JOIN task t ON t.project_id = p.id WHERE t.user_id = 2 GROUP BY p.id";
     $result = mysqli_query($connect, $sql);
 
       if (!$result) {

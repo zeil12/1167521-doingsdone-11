@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit;
                 }
                 else {
-                    $task['date'] = date_format(date_create($task['date']));
+                    $task['date'] = date_format(date_create($task['date']), 'd.m.Y');
                     $sql = "INSERT INTO task (user_id, task_name, project_id, deadline, file_link, status) VALUES (2, ?, ?, ?, ?, 0)";
                     $stmt = db_get_prepare_stmt($connect, $sql, $task);
                     $result = mysqli_stmt_execute($stmt);
