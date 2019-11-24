@@ -13,7 +13,7 @@ mysqli_set_charset($connect, "utf8");
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
 
-$projects = allProjects($connect);
+$projects = currentProjects($connect);
 
 if (isset($id)) {
     $tasks = currentTask($connect, $id);

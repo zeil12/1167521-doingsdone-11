@@ -1,8 +1,24 @@
 <?php
 
-function allProjects($connect) {
+function currentProjects($connect) {
     $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
     LEFT JOIN task t ON t.project_id = p.id WHERE p.user_id = 2 GROUP BY p.id";
+    $result = mysqli_query($connect, $sql);
+
+      if (!$result) {
+         $error = mysqli_error($connect);
+         print("MySQL error: " . $error);
+      }
+
+    $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $projects;
+
+};
+
+function allProjects($connect) {
+    $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
+    LEFT JOIN task t ON t.project_id = p.id GROUP BY p.id";
     $result = mysqli_query($connect, $sql);
 
       if (!$result) {
@@ -46,7 +62,6 @@ function currentTask ($connect, $project_id) {
     $current_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     return $current_tasks;
-
 };
 
 function count_tasks($tasks, $projects, $show_complete_tasks):int
@@ -64,7 +79,6 @@ function count_tasks($tasks, $projects, $show_complete_tasks):int
         }
     }
     
-    
     return $count;
 }; 
 
@@ -77,11 +91,7 @@ function idCheck($connect, $id)
     $result = mysqli_stmt_get_result($stmt);
     $list = mysqli_fetch_all($result);
     
-       if (empty($list)) {
-        return false;
-    }
-    
-    return true;
+    return empty(!$list) ? true : false;
 };
 
 
@@ -94,5 +104,46 @@ function is_task_urgent(?string $date): int
 
     return $time <= 24;
     
+};
+
+function getPostVal($title) {
+    return filter_input(INPUT_POST, $title);
+};
+
+function validateFilled(string $title)
+{
+    if (empty($_POST[$title])) {
+        return "Это поле должно быть заполнено";
+    }
+}
+
+function validateDate(string $date)
+{
+    $currentDay = date('d.m.Y');
+    $date = date_format(date_create($date), 'd.m.Y');
+    if ($date < $currentDay) {
+        
+        return 'Дата должна быть больше или равна текущей';
+    }
+    return null;
+};
+
+function validateProject(int $id, array $allowedList)
+{
+    if (!in_array($id, $allowedList)) {
+        return "Проект не выбран";
+    }
+    return null;
+};
+
+function validateLength(string $value, int $min, int $max)
+{
+    if ($value) {
+        $len = strlen($value);
+        if ($len < $min or $len > $max) {
+            return "Значение должно быть от $min до $max символов";
+        }
+    }
+    return null;
 };
 
