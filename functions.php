@@ -1,8 +1,8 @@
 <?php
 
-function currentProjects($connect) {
+function currentProjects($connect, $user_id) {
     $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
-    LEFT JOIN task t ON t.project_id = p.id WHERE t.user_id = 2 GROUP BY p.id";
+    LEFT JOIN task t ON t.project_id = p.id WHERE t.user_id = $user_id GROUP BY p.id";
     $result = mysqli_query($connect, $sql);
 
       if (!$result) {
@@ -10,9 +10,7 @@ function currentProjects($connect) {
          print("MySQL error: " . $error);
       }
 
-    $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    return $projects;
+    return $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 };
 
@@ -32,8 +30,9 @@ function allProjects($connect) {
 
 };
 
-function allTasks($connect) {
-    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = 2";
+function allTasks($connect, $user_id) {
+    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id 
+    FROM task WHERE user_id = $user_id";
     $result = mysqli_query($connect, $sql);
 
       if (!$result) {
@@ -47,8 +46,8 @@ function allTasks($connect) {
 
 };
 
-function currentTask ($connect, $project_id) {
-    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = 2  AND project_id = ?";
+function currentTask ($connect, $project_id, $user_id) {
+    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = $user_id  AND project_id = ?";
     $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, 'i', $project_id);
     mysqli_stmt_execute($stmt);
@@ -81,6 +80,22 @@ function count_tasks($tasks, $projects, $show_complete_tasks):int
     
     return $count;
 }; 
+
+function getCurrentUserId($connect, $id)
+{
+    $sql = "SELECT id FROM  user WHERE id = $id";
+    $result = mysqli_query($connect, $sql);
+
+      if (!$result) {
+         $error = mysqli_error($connect);
+         print("MySQL error: " . $error);
+      }
+
+    $user_id = mysqli_fetch_all($result);
+
+    return $user_id;
+};
+
 
 function idCheck($connect, $id)
 {

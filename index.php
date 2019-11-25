@@ -12,13 +12,14 @@ if (!$connect) {
 mysqli_set_charset($connect, "utf8");
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
+$user_id = getCurrentUserId($connect, 1);
 
-$projects = currentProjects($connect);
+$projects = currentProjects($connect, 1);
 
 if (isset($id)) {
-    $tasks = currentTask($connect, $id);
+    $tasks = currentTask($connect, $id, 1);
 } else {
-    $tasks = allTasks($connect);
+    $tasks = allTasks($connect, 1);
 };
     
 if (idCheck($connect, $id) || !isset($id)) {
@@ -32,7 +33,7 @@ $page_content = include_template('main.php', [
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title' => "Дела в порядке",
-    'user'  => "Jack"
+    "user" => "Jack"
 ]);
 
 print($layout_content);

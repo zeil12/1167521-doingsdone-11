@@ -1,7 +1,6 @@
 <?php
 require_once('helpers.php');
 require('functions.php');
-$user_id = 2;
 
 $connect = mysqli_connect('127.0.0.1', 'root', '', 'doingsdone');
 if (!$connect) {
@@ -13,6 +12,7 @@ mysqli_set_charset($connect, "utf8");
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
 $projects = allProjects($connect);
 $projects_id = array_column($projects, 'id');
+$user_id = getCurrentUserId($connect, 2);
     
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit;
                 }
                 else {
-                    $sql = "INSERT INTO task (user_id, task_name, project_id, deadline, file_link, status) VALUES (2, ?, ?, ?, ?, 0)";
+                    $sql = "INSERT INTO task (user_id, task_name, project_id, deadline, file_link, status) VALUES ($user_id, ?, ?, ?, ?, 0)";
                     $stmt = db_get_prepare_stmt($connect, $sql, $task);
                     $result = mysqli_stmt_execute($stmt);
 
