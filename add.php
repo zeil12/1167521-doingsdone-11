@@ -20,14 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
 
     $rules = [
-        'date' => function ($value) {
-            return validateDate($value);
+        'date' => function (string $task) {
+            return validateDate($task);
         },
-        'project' => function ($value) use ($projects_id) { 
-            return validateProject(intval($value), $projects_id);
+        'project' => function (string $task) use ( $projects_id) { 
+            return validateProject(intval($task), $projects_id);
         },
-        'title' => function ($value) {
-                return validateLength($value, 5, 100);
+        'title' => function (string $task) {
+                return validateLength($task, 5, 100);
         }
     ];
 
@@ -39,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'file' => FILTER_DEFAULT
         ], true);
 
-        foreach ($task as $key => $value) {
+        foreach ($task as $key => $task) {
             if (isset($rules[$key])) {
                 $rule = $rules[$key];
-                $errors[$key] = $rule($value);
+                $errors[$key] = $rule($task);
             }
     
-            if (in_array($key, $required) && empty($value)) {
+            if (in_array($key, $required) && empty($task)) {
                 $errors[$key] = "Поле $key надо заполнить";
             }
         }

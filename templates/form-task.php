@@ -5,7 +5,7 @@
                     <ul class="main-navigation__list">
                     <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if($id == $project["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
+                            <a class="main-navigation__list-item-link <?php if($id === $project["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
                             <span class="main-navigation__list-item-count"><?= $project["task_count"]; ?></span>
                         </li>
                     <?php endforeach; ?>
@@ -21,9 +21,11 @@
 
         <form class="form" action="add.php" method="post" enctype="multipart/form-data">
           <div class="form__row">
+          <?php $classname = isset($errors['title']) ? "form__input--error" : ""; ?>
+
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input <?php if (getPostVal('title') && validateFilled('title')): ?>form__input--error<?php endif; ?>" type="text" name="title" id="name" value="<?= getPostVal("title"); ?>" placeholder="Введите название">
+            <input class="form__input <?= $classname; ?>" type="text" name="title" id="name" value="<?= getPostVal("title"); ?>" placeholder="Введите название">
             <?php if (isset($errors["title"])): ?>
                 <p class="form__message"><?= $errors["title"]; ?></p>
             <?php endif; ?>  
@@ -36,7 +38,7 @@
               <option>Выберите проект</option>
               <?php foreach ($projects as $item): ?>
                     <option value="<?= $item["id"]; ?>"
-                        <?php if ($item["id"] == getPostVal("project")): ?>selected<?php endif; ?>>
+                        <?php if ($item["id"] === getPostVal("project")): ?>selected<?php endif; ?>>
                         <?= $item["title"]; ?>
                 <?php endforeach; ?>
             </select>
