@@ -12,14 +12,14 @@ if (!$connect) {
 mysqli_set_charset($connect, "utf8");
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
-$user_id = getCurrentUserId($connect, 1);
+$user_id = 1;
 
-$projects = currentProjects($connect, 1);
+$projects = currentProjects($connect, $user_id);
 
 if (isset($id)) {
-    $tasks = currentTask($connect, $id, 1);
+    $tasks = currentTask($connect, $id, $user_id);
 } else {
-    $tasks = allTasks($connect, 1);
+    $tasks = allTasks($connect, $user_id);
 };
     
 if (idCheck($connect, $id) || !isset($id)) {
