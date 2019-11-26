@@ -52,7 +52,7 @@
                             <span class="checkbox__text"><?=htmlspecialchars($item["task_name"]); ?></span>
                           </label>
                         </td>
-                        <td class="task__date"><?= ($item["deadline"]); ?></td>
+                        <td class="task__date"><?= htmlspecialchars(date("d.m.Y", strtotime($item["deadline"]))); ?></td>
                         <td class="task__controls"></>
                       </tr>
                  <?php endforeach; ?>
