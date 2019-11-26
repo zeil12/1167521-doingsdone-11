@@ -12,7 +12,7 @@ mysqli_set_charset($connect, "utf8");
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
 $projects = allProjects($connect);
 $projects_id = array_column($projects, 'id');
-$user_id = getCurrentUserId($connect, 2);
+$user_id = 2;
     
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

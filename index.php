@@ -12,7 +12,7 @@ if (!$connect) {
 mysqli_set_charset($connect, "utf8");
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
-$user_id = 1;
+$user_id = 2;
 
 $projects = currentProjects($connect, $user_id);
 
