@@ -1,13 +1,8 @@
 <?php
 require_once('helpers.php');
-require('functions.php');
+require_once('functions.php');
+require('init.php');
 
-$connect = mysqli_connect('127.0.0.1', 'root', '', 'doingsdone');
-if (!$connect) {
-    print("Ошибка соединения: " . mysqli_connect_error());
-    exit();
-}
-mysqli_set_charset($connect, "utf8");
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
 $projects = allProjects($connect);

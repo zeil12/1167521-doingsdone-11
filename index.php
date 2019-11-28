@@ -1,18 +1,10 @@
 <?php
 require_once('helpers.php');
-require('functions.php');
-
-$show_complete_tasks = rand(0, 1);
-
-$connect = mysqli_connect('127.0.0.1', 'root', '', 'doingsdone');
-if (!$connect) {
-    print("Ошибка соединения: " . mysqli_connect_error());
-    exit();
-}
-mysqli_set_charset($connect, "utf8");
+require_once('functions.php');
+require('init.php');
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
-$user_id = 1;
+$user_id = 2;
 
 $projects = currentProjects($connect, $user_id);
 

@@ -6,7 +6,7 @@ INSERT INTO user (registration_date, email, user_name, password) VALUES
 
 -- Добавляем записи в таблицу project
 
-INSERT INTO project ('title', 'user_id') VALUES 
+INSERT INTO project (title, user_id) VALUES 
 ('Авто', 1),
 ('Входящие', 2),
 ('Домашние дела', 2),
@@ -15,7 +15,7 @@ INSERT INTO project ('title', 'user_id') VALUES
 
 -- Добавляем записи в таблицу task
 
-INSERT INTO task ('creation_date', 'status', 'task_name', 'file_link', 'deadline', 'user_id', 'project_id') VALUES 
+INSERT INTO task (creation_date, status, task_name, file_link, deadline, user_id, project_id) VALUES 
 ('2019-10-31 22:43:12', 0, 'Купить корм для кота', NULL, '2019-12-02 22:42:10', 2, 3),
 ('2019-09-11 12:03:12', 0, 'Встреча с другом', NULL, '2019-12-31 23:02:40', 2, 2),
 ('2019-09-11 12:03:12', 1, 'Собеседование в IT компании', NULL, '2019-12-12 20:02:10', 1, 5),
