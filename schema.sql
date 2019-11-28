@@ -9,7 +9,7 @@ CREATE TABLE user (
     registration_date   TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
     email      VARCHAR(30) UNIQUE NOT NULL,
     user_name  VARCHAR(30) NOT NULL,
-    password   VARCHAR(40) NOT NULL,
+    password   CHAR(120) NOT NULL,
     INDEX (registration_date),
     UNIQUE UK_email (email),
     INDEX (user_name)

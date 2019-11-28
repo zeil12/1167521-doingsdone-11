@@ -162,3 +162,10 @@ function validateLength(string $value, int $min, int $max)
     return null;
 };
 
+function validateEmail($value) {
+    if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        return "E-mail введён некорректно";
+    }
+    return null;
+}
+
