@@ -3,15 +3,26 @@ require_once('helpers.php');
 require_once('functions.php');
 require('init.php');
 
-$id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
-$user_id = 2;
+if (!isset($_SESSION["user"])) {
+    header("location: guests.php");
+}
 
-$projects = currentProjects($connect, $user_id);
+
+$user = $_SESSION["user"];
+$user_id = $_SESSION["user"]["id"];
+
+$sql = "SELECT * FROM user WHERE id= '$user_id'";
+$result = mysqli_query($connect, $sql);
+$users = mysqli_fetch_assoc($result);
+
+$id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
+
+$projects = currentProjects($connect, $users['id']);
 
 if (isset($id)) {
-    $tasks = currentTask($connect, $id, $user_id);
+    $tasks = currentTask($connect, $id, $users['id']);
 } else {
-    $tasks = allTasks($connect, $user_id);
+    $tasks = allTasks($connect, $users['id']);
 };
     
 if (idCheck($connect, $id) || !isset($id)) {
@@ -24,8 +35,8 @@ $page_content = include_template('main.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => "Дела в порядке",
-    "user" => "Jack"
+    'title' => "Дела Впорядке",
+    'users' => $users    
 ]);
 
 print($layout_content);

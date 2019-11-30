@@ -38,7 +38,7 @@
               <option>Выберите проект</option>
               <?php foreach ($projects as $item): ?>
                     <option value="<?= $item["id"]; ?>"
-                        <?php if ($item["id"] === getPostVal("project")): ?>selected<?php endif; ?>>
+                        <?php if ($item["id"] == getPostVal("project")): ?>selected<?php endif; ?>>
                         <?= $item["title"]; ?>
                 <?php endforeach; ?>
             </select>
@@ -48,7 +48,7 @@
           </div>
 
           <div class="form__row">
-            <label class="form__label" for="date">Дата выполнения</label>
+            <label class="form__label" for="date">Дата выполнения <?= var_dump($user_id); ?></label>
 
 <input class="form__input form__input--date <?php if (isset($errors["date"])): ?>form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?= getPostVal('date') ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
             <?php if (isset($errors["date"])): ?>
