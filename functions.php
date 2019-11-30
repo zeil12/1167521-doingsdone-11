@@ -27,7 +27,6 @@ function allProjects($connect) {
     $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     return $projects;
-
 };
 
 function allTasks($connect, $user_id) {
@@ -43,7 +42,6 @@ function allTasks($connect, $user_id) {
     $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     return $tasks;
-
 };
 
 function currentTask ($connect, $project_id, $user_id) {
@@ -80,6 +78,19 @@ function count_tasks($tasks, $projects, $show_complete_tasks):int
     
     return $count;
 }; 
+function getUserId($connect, $typedEmail)
+{
+    $sqlUserId =
+        "SELECT id FROM user
+    WHERE email = ?";
+    $stmt = mysqli_prepare($connect, $sqlUserId);
+    mysqli_stmt_bind_param($stmt, 's', $typedEmail);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $id = mysqli_fetch_all($result);
+    
+    return $id;
+};
 
 function getCurrentUserId($connect, $id)
 {
@@ -110,7 +121,7 @@ function idCheck($connect, $id)
 };
 
 
-function is_task_urgent(?string $date): int
+function is_task_urgent(string $date): bool
 {
     $sec_in_hours = 3600;
     $end_ts = strtotime($date);
@@ -118,10 +129,10 @@ function is_task_urgent(?string $date): int
     $time = floor($ts_diff / $sec_in_hours);
 
     return $time <= 24;
-    
 };
 
 function getPostVal($title) {
+    
     return filter_input(INPUT_POST, $title);
 };
 
@@ -132,7 +143,7 @@ function validateFilled(string $title)
     }
 }
 
-function validateDate(string $date)
+function validateDate($date)
 {
     $currentDay = date('d.m.Y');
     $date = date_format(date_create($date), 'd.m.Y');
@@ -143,7 +154,7 @@ function validateDate(string $date)
     return null;
 };
 
-function validateProject(int $id, array $allowedList)
+function validateProject( $id, $allowedList)
 {
     if (!in_array($id, $allowedList)) {
         return "Проект не выбран";

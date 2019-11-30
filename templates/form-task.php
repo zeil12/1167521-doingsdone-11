@@ -38,7 +38,7 @@
               <option>Выберите проект</option>
               <?php foreach ($projects as $item): ?>
                     <option value="<?= $item["id"]; ?>"
-                        <?php if ($item["id"] === getPostVal("project")): ?>selected<?php endif; ?>>
+                        <?php if ($item["id"] == getPostVal("project")): ?>selected<?php endif; ?>>
                         <?= $item["title"]; ?>
                 <?php endforeach; ?>
             </select>
