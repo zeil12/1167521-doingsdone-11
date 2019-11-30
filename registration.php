@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     
      foreach ($req_fields as $field) {
-        if (empty($form[$field])) {
+        if (empty(trim($form[$field]))) {
             $errors[$field] = "Не заполнено поле " . $field;
         }
     } 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if (mysqli_num_rows($result) > 0) {
             $errors['email'] = "Пользователь с этим email уже зарегистрирован";
-        }else {
+        } else {
             $password = password_hash($form['password'], PASSWORD_DEFAULT);
             $sql = "INSERT INTO user (registration_date, email, user_name, password) VALUES (NOW(), ?, ?, ?)";
             $stmt = db_get_prepare_stmt($connect, $sql, [$form['email'], $form['name'], $password]);
@@ -41,10 +41,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!$result) {
             $error = mysqli_error($connect);
             print("MySQL error: ". $error);
-         } else
+         } else {
+            $email = mysqli_real_escape_string($connect, $form['email']);
+            $sql = "SELECT * FROM user WHERE email= '$email'";
+            $result = mysqli_query($connect, $sql);
+            $users = mysqli_fetch_assoc($result);
+            $_SESSION["user"] = $users;
+            
             header("Location: index.php");
         }
     }
+}
 
         $tpl_data['errors'] = $errors;
         $tpl_data['values'] = $form;

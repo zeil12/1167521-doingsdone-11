@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
         if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = "Введен неверный формат email";
-        }else {
-           $email = mysqli_real_escape_string($connect, $form['email']);
+        } else {
+            $email = mysqli_real_escape_string($connect, $form['email']);
             $sql = "SELECT * FROM user WHERE email= '$email'";
             $result = mysqli_query($connect, $sql);
             

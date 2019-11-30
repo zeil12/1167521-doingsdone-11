@@ -48,7 +48,7 @@
           </div>
 
           <div class="form__row">
-            <label class="form__label" for="date">Дата выполнения <?= var_dump($user_id); ?></label>
+            <label class="form__label" for="date">Дата выполнения</label>
 
 <input class="form__input form__input--date <?php if (isset($errors["date"])): ?>form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?= getPostVal('date') ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
             <?php if (isset($errors["date"])): ?>

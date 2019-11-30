@@ -24,22 +24,23 @@ if (isset($id)) {
 } else {
     $tasks = allTasks($connect, $users['id']);
 };
+
     
 if (idCheck($connect, $id) || !isset($id)) {
-$page_content = include_template('main.php', [
-    'show_complete_tasks' => $show_complete_tasks,
-    'tasks' => $tasks,
-    'projects' => $projects,
-    'id' => $id
-]);
+    $page_content = include_template('main.php', [
+        'show_complete_tasks' => $show_complete_tasks,
+        'tasks' => $tasks,
+        'projects' => $projects,
+        'id' => $id
+    ]);
 
-$layout_content = include_template('layout.php', [
-    'content' => $page_content,
-    'title' => "Дела Впорядке",
-    'users' => $users    
-]);
+    $layout_content = include_template('layout.php', [
+        'content' => $page_content,
+        'title' => "Дела Впорядке",
+        'users' => $users    
+    ]);
 
-print($layout_content);
+    print($layout_content);
 } else {
     var_dump(http_response_code(404));
 }
