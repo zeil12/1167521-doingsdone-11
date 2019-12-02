@@ -1,6 +1,7 @@
 <?php
 
-function currentProjects($connect, $user_id) {
+function currentProjects($connect, $user_id) 
+{
     $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
     LEFT JOIN task t ON t.project_id = p.id WHERE t.user_id = $user_id GROUP BY p.id";
     $result = mysqli_query($connect, $sql);
@@ -14,7 +15,8 @@ function currentProjects($connect, $user_id) {
 
 };
 
-function allProjects($connect) {
+function allProjects($connect) 
+{
     $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
     LEFT JOIN task t ON t.project_id = p.id GROUP BY p.id";
     $result = mysqli_query($connect, $sql);
@@ -29,7 +31,8 @@ function allProjects($connect) {
     return $projects;
 };
 
-function allTasks($connect, $user_id) {
+function allTasks($connect, $user_id) 
+{
     $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id 
     FROM task WHERE user_id = $user_id";
     $result = mysqli_query($connect, $sql);
@@ -44,8 +47,10 @@ function allTasks($connect, $user_id) {
     return $tasks;
 };
 
-function currentTask ($connect, $project_id, $user_id) {
-    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id FROM task WHERE user_id = $user_id  AND project_id = ?";
+function currentTask ($connect, $project_id, $user_id) 
+{
+    $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id 
+    FROM task WHERE user_id = $user_id  AND project_id = ?";
     $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, 'i', $project_id);
     mysqli_stmt_execute($stmt);
@@ -80,13 +85,16 @@ function count_tasks($tasks, $projects, $show_complete_tasks):int
 }; 
 function getUserId($connect, $typedEmail)
 {
-    $sqlUserId =
-        "SELECT id FROM user
-    WHERE email = ?";
-    $stmt = mysqli_prepare($connect, $sqlUserId);
+    $sql = "SELECT id FROM user WHERE email = ?";
+    $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, 's', $typedEmail);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
+    
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print("MySQL error: ". $error);
+     }
     $id = mysqli_fetch_all($result);
     
     return $id;
@@ -115,7 +123,13 @@ function idCheck($connect, $id)
     mysqli_stmt_bind_param($stmt, 'i', $id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $list = mysqli_fetch_all($result);
+    
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print("MySQL error: ". $error);
+     }
+    
+     $list = mysqli_fetch_all($result);
     
     return empty(!$list) ? true : false;
 };
@@ -162,8 +176,7 @@ function validateProject( $id, $allowedList)
     return null;
 };
 
-function validateLength(string $value, int $min, int $max)
-{
+function validateLength(string $value, int $min, int $max) {
     if ($value) {
         $len = strlen($value);
         if ($len < $min or $len > $max) {
@@ -178,5 +191,21 @@ function validateEmail($value) {
         return "E-mail введён некорректно";
     }
     return null;
-}
+};
 
+function TaskFinder($connect, $user_id, $search):array 
+{
+    $sql = "SELECT t.id, t.creation_date, t.deadline, t.task_name, t.user_id, t.status FROM task t 
+    LEFT JOIN user u ON t.user_id = u.id WHERE t.user_id = $user_id AND MATCH(task_name) AGAINST(?)";
+    $stmt = mysqli_prepare($connect, $sql);
+    mysqli_stmt_bind_param($stmt, 's', $search);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if (!$result) {
+        $error = mysqli_error($connect);
+        print("MySQL error: ". $error);
+     }
+    
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+};

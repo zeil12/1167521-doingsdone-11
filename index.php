@@ -25,13 +25,26 @@ if (isset($id)) {
     $tasks = allTasks($connect, $users['id']);
 };
 
+if (isset($_GET["search"])) {
+    $search = trim($_GET["search"]);
+    if ($search) {
+    $tasks = TaskFinder($connect, $users['id'], $search);
+    if (!$tasks) {
+        $search_error = "Ничего не найдено по вашему запросу";
+    };
+}
+};
+
     
 if (idCheck($connect, $id) || !isset($id)) {
     $page_content = include_template('main.php', [
         'show_complete_tasks' => $show_complete_tasks,
         'tasks' => $tasks,
         'projects' => $projects,
-        'id' => $id
+        'id' => $id,
+        'search' => $search,
+        'search_error' => $search_error
+
     ]);
 
     $layout_content = include_template('layout.php', [
