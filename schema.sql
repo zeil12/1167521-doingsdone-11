@@ -37,7 +37,7 @@ CREATE TABLE task (
     INDEX (creation_date)
 );
 
-
+CREATE FULLTEXT INDEX task_search ON task (task_name);
 
 
 

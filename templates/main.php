@@ -5,7 +5,8 @@
                     <ul class="main-navigation__list">
                     <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if($id == $project["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
+                            <a class="main-navigation__list-item-link <?php if($id == $project["id"]): ?>main-navigation__list-item--active <?php endif ?>" 
+                            href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
                             <span class="main-navigation__list-item-count"><?= $project["task_count"]; ?></span>
                         </li>
                     <?php endforeach; ?>
@@ -18,8 +19,8 @@
 
             <main class="content__main">
                 <h2 class="content__main-heading">Список задач</h2>
-                <form class="search-form" action="index.php" method="post" autocomplete="off">
-                    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+                <form class="search-form" action="index.php" method="get" autocomplete="off">
+                    <input class="search-form__input" type="text" name="search" value="" placeholder="Поиск по задачам">
 
                     <input class="search-form__submit" type="submit" name="" value="Искать">
                 </form>
@@ -34,12 +35,14 @@
 
                     <label class="checkbox">
                         <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-                        <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if ($show_complete_tasks === 1): ?>checked<?php endif; ?>>
+                        <input class="checkbox__input visually-hidden show_completed" type="checkbox" 
+                        <?php if ($show_complete_tasks === 1): ?>checked<?php endif; ?>>
                         <span class="checkbox__text">Показывать выполненные</span>
                     </label>
                 </div>
 
                 <table class="tasks">
+                <?php if (isset($_GET["search"]) && empty($tasks)): ?><? print_r($search_error); ?><?php endif; ?>
                  <?php foreach ($tasks as $item): ?>
                     <?php if ($show_complete_tasks == 0 && $item["status"] == 1): ?>
                       <?php continue; ?>
