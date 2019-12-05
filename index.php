@@ -49,18 +49,17 @@ if (isset($_GET['task_id'])) {
 }
 
 if (isset($_GET['filter'])) {
-    $tab = filter_var($_GET['tab'], FILTER_SANITIZE_STRING);
-    if ($_GET['filter'] == "past") {
+    if ($_GET['filter'] === "past") {
           $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
             FROM task t
             WHERE DATE(t.deadline) < DATE(NOW()) and t.user_id =" .$user_id;
         }
-        if ($_GET['filter'] == "tomorrow") {
+        if ($_GET['filter'] === "tomorrow") {
                 $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
                 FROM task t
                 WHERE DATE(t.deadline) = (CURDATE() + INTERVAL 1 DAY) and t.user_id =" .$user_id;
             }
-        if ($_GET['filter'] == "today") {
+        if ($_GET['filter'] === "today") {
             $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
             FROM task t
             WHERE DATE(t.deadline) = DATE(NOW()) and t.user_id =" .$user_id;

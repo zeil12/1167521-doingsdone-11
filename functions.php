@@ -163,36 +163,3 @@ function taskFinder($connect, $user_id, $search):array
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 };
 
-function taskFilter($connect, $user_id, $filter)
-{
-    $sql = '';
-    switch ($filter) {
-        case 'past' : {
-    
-          $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
-            FROM task t
-            WHERE DATE(t.deadline) < DATE(NOW()) and t.user_id =" .$user_id;
-            break;
-        }
-            case 'tomorrow': {
-                $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
-                FROM task t
-                WHERE DATE(t.deadline) < (CURDATE() + INTERVAL 1 DAY)) and t.user_id =" .$user_id;
-            break;
-        }
-            case 'today': {
-            $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
-            FROM task t
-            WHERE DATE(t.deadline) = DATE(NOW()) and t.user_id =" .$user_id;
-                break;
-            }
-     }
-    $result = mysqli_query($connect, $sql);
-    
-        if (!$result) {
-        $error = mysqli_error($connect);
-        print("MySQL error: ". $error);
-     }
-    
-    return $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    };
