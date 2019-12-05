@@ -1,24 +1,9 @@
 <?php
 
-function currentProjects($connect, $user_id) 
+function allProjects($connect, $user_id) 
 {
-    $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
-    LEFT JOIN task t ON t.project_id = p.id WHERE t.user_id = $user_id GROUP BY p.id";
-    $result = mysqli_query($connect, $sql);
-
-      if (!$result) {
-         $error = mysqli_error($connect);
-         print("MySQL error: " . $error);
-      }
-
-    return $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-};
-
-function allProjects($connect) 
-{
-    $sql = "SELECT p.title, p.id, COUNT(t.id) AS task_count FROM project p
-    LEFT JOIN task t ON t.project_id = p.id GROUP BY p.id";
+    $sql = "SELECT p.title, p.id, p.user_id, COUNT(t.id) AS task_count FROM project p 
+    LEFT JOIN task t ON t.project_id = p.id WHERE p.user_id = $user_id GROUP BY p.id";
     $result = mysqli_query($connect, $sql);
 
       if (!$result) {
@@ -83,38 +68,6 @@ function count_tasks($tasks, $projects, $show_complete_tasks):int
     
     return $count;
 }; 
-function getUserId($connect, $typedEmail)
-{
-    $sql = "SELECT id FROM user WHERE email = ?";
-    $stmt = mysqli_prepare($connect, $sql);
-    mysqli_stmt_bind_param($stmt, 's', $typedEmail);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    
-    if (!$result) {
-        $error = mysqli_error($connect);
-        print("MySQL error: ". $error);
-     }
-    $id = mysqli_fetch_all($result);
-    
-    return $id;
-};
-
-function getCurrentUserId($connect, $id)
-{
-    $sql = "SELECT id FROM  user WHERE id = $id";
-    $result = mysqli_query($connect, $sql);
-
-      if (!$result) {
-         $error = mysqli_error($connect);
-         print("MySQL error: " . $error);
-      }
-
-    $user_id = mysqli_fetch_all($result);
-
-    return $user_id;
-};
-
 
 function idCheck($connect, $id)
 {
@@ -168,9 +121,9 @@ function validateDate($date)
     return null;
 };
 
-function validateProject( $id, $allowedList)
+function validateProject( $id, $list)
 {
-    if (!in_array($id, $allowedList)) {
+    if (!in_array($id, $list)) {
         return "Проект не выбран";
     }
     return null;
@@ -193,7 +146,7 @@ function validateEmail($value) {
     return null;
 };
 
-function TaskFinder($connect, $user_id, $search):array 
+function taskFinder($connect, $user_id, $search):array 
 {
     $sql = "SELECT t.id, t.creation_date, t.deadline, t.task_name, t.user_id, t.status FROM task t 
     LEFT JOIN user u ON t.user_id = u.id WHERE t.user_id = $user_id AND MATCH(task_name) AGAINST(?)";
@@ -209,3 +162,37 @@ function TaskFinder($connect, $user_id, $search):array
     
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 };
+
+function taskFilter($connect, $user_id, $filter)
+{
+    $sql = '';
+    switch ($filter) {
+        case 'past' : {
+    
+          $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
+            FROM task t
+            WHERE DATE(t.deadline) < DATE(NOW()) and t.user_id =" .$user_id;
+            break;
+        }
+            case 'tomorrow': {
+                $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
+                FROM task t
+                WHERE DATE(t.deadline) < (CURDATE() + INTERVAL 1 DAY)) and t.user_id =" .$user_id;
+            break;
+        }
+            case 'today': {
+            $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
+            FROM task t
+            WHERE DATE(t.deadline) = DATE(NOW()) and t.user_id =" .$user_id;
+                break;
+            }
+     }
+    $result = mysqli_query($connect, $sql);
+    
+        if (!$result) {
+        $error = mysqli_error($connect);
+        print("MySQL error: ". $error);
+     }
+    
+    return $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    };
