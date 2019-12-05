@@ -55,7 +55,6 @@
                 <p class="form__message"><?= $errors["date"]; ?></p>
             <?php endif; ?>
         </div>
-
           <div class="form__row">
             <label class="form__label" for="file">Файл</label>
 

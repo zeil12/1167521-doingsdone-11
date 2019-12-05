@@ -15,7 +15,7 @@ $result = mysqli_query($connect, $sql);
 $users = mysqli_fetch_assoc($result);
 
 $id = filter_input(INPUT_GET,'project', FILTER_SANITIZE_NUMBER_INT);
-$projects = currentProjects($connect, $users['id']);
+$projects = allProjects($connect, $users['id']);
 $projects_id = array_column($projects, 'id');
 
     
@@ -114,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $page_content = include_template($tpl_path . "form-task.php", [
             "projects" => $projects,
             "id" => $id,
+            "errors" => $errors
     ]);
     $layout_content = include_template($tpl_path . "layout.php", [
         "content" => $page_content,
