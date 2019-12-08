@@ -106,6 +106,7 @@ function getPostVal($title) {
 function validateFilled(string $title)
 {
     if (empty($_POST[$title])) {
+        
         return "Это поле должно быть заполнено";
     }
 }
@@ -124,8 +125,10 @@ function validateDate($date)
 function validateProject( $id, $list)
 {
     if (!in_array($id, $list)) {
+        
         return "Проект не выбран";
     }
+    
     return null;
 };
 
@@ -133,16 +136,20 @@ function validateLength(string $value, int $min, int $max) {
     if ($value) {
         $len = strlen($value);
         if ($len < $min or $len > $max) {
+            
             return "Значение должно быть от $min до $max символов";
         }
     }
+    
     return null;
 };
 
-function validateEmail($value) {
-    if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-        return "E-mail введён некорректно";
+function validateEmail($email) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        
+        return "email введён некорректно";
     }
+    
     return null;
 };
 
