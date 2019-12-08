@@ -11,9 +11,11 @@
             <div class="form__row">
             <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
-              <input class="form__input <?= ( isset($errors['email']) ? 'form__input--error' : '' ); ?>" type="text" name="email" id="email" value="<?=$values['email'] ?? ''; ?>" placeholder="Введите e-mail">
+              <input class="form__input <?= ( isset($errors["email"]) ? 'form__input--error' : '' ); ?>" type="text" name="email" id="email" value="<?=$values['email'] ?? ''; ?>" placeholder="Введите e-mail">
 
-              <?= ( isset($errors['email']) ? '<p class="form__message">'.$errors['email'].'</p>' : '' ); ?>
+              <?php if (isset($errors["email"])): ?>
+                  <p class="form__message"><?= $errors["email"]; ?></p>
+              <?php endif; ?>
             </div>
 
             <div class="form__row">
@@ -21,8 +23,8 @@
 
               <input class="form__input <?= ( isset($errors['password']) ? 'form__input--error' : '' ); ?>" type="password" name="password" id="password" value="" placeholder="Введите пароль">
               <?php if (isset($errors["password"])): ?>
-                    <p class="form__message"><?= $errors["password"]; ?></p>
-                <?php endif; ?>
+                  <p class="form__message"><?= $errors["password"]; ?></p>
+              <?php endif; ?>
             </div>
 
             <div class="form__row">
@@ -30,8 +32,8 @@
 
               <input class="form__input <?= ( isset($errors['name']) ? 'form__input--error' : '' ); ?>" type="text" name="name" id="name" value="<?=$values['name'] ?? ''; ?>" placeholder="Введите имя">
               <?php if (isset($errors["name"])): ?>
-                    <p class="form__message"><?= $errors["name"]; ?></p>
-                <?php endif; ?>
+                  <p class="form__message"><?= $errors["name"]; ?></p>
+              <?php endif; ?>
             </div>
 
             <div class="form__row form__row--controls">

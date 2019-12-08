@@ -3,7 +3,8 @@ require_once('helpers.php');
 require_once('functions.php');
 require('init.php');
 
-if (!isset($_SESSION["user"])) {
+if (!isset($_SESSION["user"])) 
+{
     header("location: guests.php");
 }
 

@@ -1,0 +1,13 @@
+{
+    "name": "nikolas/1167521-doingsdone-11",
+    "type": "project",
+    "authors": [
+        {
+            "name": "zeil12",
+            "email": "braska321@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
+}
