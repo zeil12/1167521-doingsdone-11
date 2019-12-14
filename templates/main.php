@@ -8,7 +8,7 @@
                             <a class="main-navigation__list-item-link <?php if($id == $project["id"]): ?>main-navigation__list-item--active 
                             <?php endif ?>" 
                             href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
-                            <span class="main-navigation__list-item-count"><?= $project["task_count"]; ?></span>
+                            <span class="main-navigation__list-item-count"><?=htmlspecialchars($project["task_count"]); ?></span>
                         </li>
                     <?php endforeach; ?>
                     </ul>
@@ -33,13 +33,10 @@
                         <a href="/?filter=tomorrow" class="tasks-switch__item">Завтра</a>
                         <a href="/?filter=past" class="tasks-switch__item">Просроченные</a>
                     </nav>
-                        <input class="checkbox__input visually-hidden show_completed" type="checkbox">
                           <label class="checkbox">
-                <input class="checkbox__input visually-hidden show_completed" type="checkbox"
-                    <?php if ($show_complete_tasks == 1): ?>
-                        checked
-                    <?php endif; ?>>
-                        <span class="checkbox__text">Показывать выполненные</span>
+                          <input class="checkbox__input visually-hidden show_completed" type="checkbox" name="show_completed"
+                <?php echo ($show_complete_tasks == 1) ? 'checked' : ''; ?>>
+            <span class="checkbox__text">Показывать выполненные</span>
                     </label>
                 </div>
 

@@ -1,3 +1,8 @@
+<section class="content__side">
+    <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+
+    <a class="button button--transparent content__side-button" href="auth.php">Войти</a>
+</section>
 <main class="content__main">
         <h2 class="content__main-heading">Вход на сайт</h2>
 
@@ -6,7 +11,7 @@
             <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
             <input class="form__input <?= ( isset($errors['email']) ? 'form__input--error' : '' ); ?>" type="text" name="email" id="email" 
-                   value="<?= isset($email) ? $email : ''; ?>" placeholder="Введите e-mail">
+                   value="" placeholder="Введите e-mail">
 
             <?= ( isset($errors['email']) ? '<p class="form__message">'.$errors['email'].'</p>' : '' ); ?>
           </div>

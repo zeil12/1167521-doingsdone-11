@@ -13,7 +13,7 @@
                 </nav>
 
                 <a class="button button--transparent button--plus content__side-button"
-                   href="pages/form-project.html" target="project_add">Добавить проект</a>
+                   href="add_project.php" target="project_add">Добавить проект</a>
             </section>
 
 <main class="content__main">
@@ -25,7 +25,7 @@
 
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input <?= $classname; ?>" type="text" name="title" id="name" value="<?= getPostVal("title"); ?>" placeholder="Введите название">
+            <input class="form__input <?= $classname; ?>" type="text" name="title" id="name" value="<?= htmlspecialchars(getPostVal("title")); ?>" placeholder="Введите название">
             <?php if (isset($errors["title"])): ?>
                 <p class="form__message"><?= $errors["title"]; ?></p>
             <?php endif; ?>  
@@ -50,7 +50,7 @@
           <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-<input class="form__input form__input--date <?php if (isset($errors["date"])): ?>form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?= getPostVal('date') ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+<input class="form__input form__input--date <?php if (isset($errors["date"])): ?>form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?=htmlspecialchars(getPostVal('date')) ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
             <?php if (isset($errors["date"])): ?>
                 <p class="form__message"><?= $errors["date"]; ?></p>
             <?php endif; ?>
@@ -58,7 +58,7 @@
           <div class="form__row">
             <label class="form__label" for="file">Файл</label>
 
-            <div class="form__input-file <?php if (isset($errors["date"])): ?>form__input--error<?php endif; ?>">
+            <div class="form__input-file <?php if (isset($errors["file"])): ?>form__input--error<?php endif; ?>">
               <input class="visually-hidden" type="file" name="file" id="file" value="">
 
               <label class="button button--transparent" for="file">

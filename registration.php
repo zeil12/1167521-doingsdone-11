@@ -1,74 +1,71 @@
 <?php
-require_once('helpers.php');
-require_once('functions.php');
-require('init.php');
+require_once( 'helpers.php' );
+require_once( 'functions.php' );
+require( 'init.php' );
 
-$tpl_data = [];
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $form = $_POST;
-    $errors = [];
-    $req_fields = ['email', 'password', 'name'];
-    $rules = [
-        "email" => function($value) {
-            return validateEmail($value);
-        }
-        ];
-
-    foreach ($form as $key => $value) {
-        if (isset($rules[$key])) {
-            $rule = $rules[$key];
-            $errors[$key] = $rule($value);
-        }
-
-        if (in_array($key, $req_fields) && empty($value)) {
-           $errors[$key] = "Данное поле нужно заполнить";
-        }
-            
-
-    }
-
-    $errors = array_filter($errors);
-
-    if (empty($errors)) {
-        $email = mysqli_real_escape_string($connect, $form['email']);
-        $sql = "SELECT id, email FROM user WHERE email = '$email'";
-        $result = mysqli_query($connect, $sql);
-        
-        if (mysqli_num_rows($result) > 0) {
-            $errors['email'] = "Пользователь с этим email уже зарегистрирован";
-        }else {
-            $password = password_hash($form['password'], PASSWORD_DEFAULT);
-            $sql = "INSERT INTO user (registration_date, email, user_name, password) VALUES (NOW(), ?, ?, ?)";
-            $stmt = db_get_prepare_stmt($connect, $sql, [$form['email'], $form['name'], $password]);
-            $result = mysqli_stmt_execute($stmt);
-        }
-        if (!$result) {
-            $error = mysqli_error($connect);
-            print("MySQL error: ". $error);
-         } else {
-            $email = mysqli_real_escape_string($connect, $form['email']);
-            $sql = "SELECT * FROM user WHERE email= '$email'";
-            $result = mysqli_query($connect, $sql);
-            $users = mysqli_fetch_assoc($result);
-            $_SESSION["user"] = $users;
-            
-            header("Location: index.php");
-        }
-    }
+if ( isset( $_SESSION['user'] ) )  {
+    header( 'location: index.php' );
 }
-        $tpl_data['errors'] = $errors;
-        $tpl_data['values'] = $form;
-        
 
-    $page_content = include_template("register.php", $tpl_data, [
-            "id" => $id,
-            
+$errors = [];
+$tpl_data = [];
+$form = [];
 
-    ]);
-    $layout_content = include_template("layout.php", [
-        "content" => $page_content,
-        "user" => "Jack",
-        "title" => "Дела в порядке | Регистрация нового пользователя"
-    ]);
-    print($layout_content);
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+    $form = $_POST;
+    $req_fields = ['email', 'password', 'name'];
+
+    foreach ( $req_fields as $field ) {
+        if ( empty( $form[$field] ) ) {
+            $errors[$field] = 'Не заполнено поле ' . $field;
+        }
+        if ( isset( $form[$field] ) ) {
+            $len = strlen( $form[$field] );
+        }
+        if ( $len < 3 or $len > 30 ) {
+            $errors[$field] = 'Значение должно быть от 3 до 30 символов';
+        }
+    }
+
+    if ( isset( $form['email'] ) ) {
+        if ( !filter_var( $form['email'], FILTER_VALIDATE_EMAIL ) ) {
+            $errors['email'] = 'email введён некорректно';
+        }
+    }
+
+    if ( empty( $errors ) ) {
+        $email = mysqli_real_escape_string( $connect, $form['email'] );
+        $sql = "SELECT id FROM user WHERE email = '$email'";
+        $result = mysqli_query( $connect, $sql );
+
+        if ( mysqli_num_rows( $result ) > 0 ) {
+            $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
+        } else {
+            $password = password_hash( $form['password'], PASSWORD_DEFAULT );
+            $sql = 'INSERT INTO user (registration_date, email, user_name, password) VALUES (NOW(), ?, ?, ?)';
+            $stmt = db_get_prepare_stmt( $connect, $sql, [$form['email'], $form['name'], $password] );
+            $result = mysqli_stmt_execute( $stmt );
+        }
+        if ( $result && empty( $errors ) ) {
+            $user = mysqli_real_escape_string( $connect, $form['name'] );
+            $sql = "SELECT * FROM user WHERE user_name = '$user'";
+            $result = mysqli_query( $connect, $sql );
+            $users = mysqli_fetch_assoc( $result );
+            $_SESSION['user'] = $users;
+            header( 'Location: index.php' );
+            exit();
+        }
+    }
+
+}
+
+$tpl_data['errors'] = $errors;
+$tpl_data['values'] = $form;
+
+$page_content = include_template( 'register.php', $tpl_data );
+$layout_content = include_template( 'layout.php', [
+    'content' => $page_content,
+    'title' => 'Дела в порядке | Регистрация нового пользователя'
+] );
+print( $layout_content );
+
