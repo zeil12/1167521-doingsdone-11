@@ -48,10 +48,10 @@ function count_tasks( $tasks, $projects, $show_complete_tasks ):
 int {
     $count = 0;
     foreach ( $tasks as $item ) {
-        if ( $item['project_id'] == $projects['id'] ) {
-            if ( $item['status'] == 0 ) {
+        if ( $item['project_id'] === $projects['id'] ) {
+            if ( $item['status'] === 0 ) {
                 $count++;
-            } elseif ( $item['status'] == 1 && $show_complete_tasks == 1 ) {
+            } elseif ( $item['status'] === 1 && $show_complete_tasks == 1 ) {
                 $count++;
             }
         }
