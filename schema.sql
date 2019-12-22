@@ -29,7 +29,7 @@ CREATE TABLE task (
     status     INT NOT NULL,
     task_name   VARCHAR(50) NOT NULL,
     file_link  VARCHAR(100),
-    deadline   DATE NULL,
+    deadline   VARCHAR(10),
     user_id    INT NOT NULL,
     project_id    INT NOT NULL,
     FOREIGN KEY (user_id)     REFERENCES user (id),

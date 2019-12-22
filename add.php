@@ -77,12 +77,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
     $errors = array_filter( $errors );
 
     if ( count( $errors ) ) {
-      if (!empty($task['date'])) 
-      {
-          $task['date'] = date_format(date_create($task['date']), 'Y.m.d'); 
-      }else {
-          $task['date'] = null;
-      }
+        if (!empty($task['date'])) 
+        {
+            $task['date'] = date_format(date_create($task['date']), 'Y.m.d'); 
+        }else {
+            $task['date'] = null;
+        }
     $page_content = include_template( 'form-task.php',
     [
         'errors' => $errors,
