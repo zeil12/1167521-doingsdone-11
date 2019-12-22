@@ -29,12 +29,11 @@ CREATE TABLE task (
     status     INT NOT NULL,
     task_name   VARCHAR(50) NOT NULL,
     file_link  VARCHAR(100),
-    deadline   DATETIME NOT NULL,
+    deadline   DATE NULL,
     user_id    INT NOT NULL,
     project_id    INT NOT NULL,
     FOREIGN KEY (user_id)     REFERENCES user (id),
-    FOREIGN KEY (project_id)  REFERENCES project (id),
-    INDEX (creation_date)
+    FOREIGN KEY (project_id)  REFERENCES project (id)
 );
 
 CREATE FULLTEXT INDEX task_search ON task (task_name);

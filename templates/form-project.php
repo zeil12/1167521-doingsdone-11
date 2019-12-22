@@ -6,7 +6,7 @@
                     <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link <?php if($id === $project["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
-                            <span class="main-navigation__list-item-count"><?= $project["task_count"]; ?></span>
+                            <span class="main-navigation__list-item-count"><?= htmlspecialchars($project["task_count"]); ?></span>
                         </li>
                     <?php endforeach; ?>
                     </ul>
@@ -23,7 +23,7 @@
           <?php $classname = isset($errors['name']) ? "form__input--error" : ""; ?>
             <label class="form__label" for="project_name">Название <sup>*</sup></label>
 
-            <input class="form__input <?=$classname; ?>" type="text" name="name" id="project_name" value="" placeholder="Введите название проекта">
+            <input class="form__input <?=$classname; ?>" type="text" name="name" id="project_name" value="<?= htmlspecialchars(getPostVal("name")); ?>" placeholder="Введите название проекта">
             <?php if (isset($errors["name"])): ?>
                 <p class="form__message"><?= $errors["name"]; ?></p>
             <?php endif; ?>   

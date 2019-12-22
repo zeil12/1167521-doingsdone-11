@@ -2,11 +2,12 @@
 require_once ( 'helpers.php' );
 require_once ( 'functions.php' );
 require ( 'init.php' );
+
 if ( !isset( $_SESSION['user'] ) ) {
     header( 'location: guests.php' );
 }
 $user = $_SESSION['user'];
-$user_id = $_SESSION['user']['id'];
+$user_id = mysqli_real_escape_string($connect, $_SESSION['user']['id']);
 $id = filter_input( INPUT_GET, 'project', FILTER_SANITIZE_NUMBER_INT );
 $users = userCheck( $connect, $user_id );
 $projects = allProjects( $connect, $users['id'] );

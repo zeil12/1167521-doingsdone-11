@@ -12,7 +12,7 @@
             
             <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
-              <input class="form__input <?= ( isset($errors['email']) ? 'form__input--error' : '' ); ?>" type="text" name="email" id="email" value="<?=htmlspecialchars($values['email']) ?? ''; ?>" placeholder="Введите e-mail">
+              <input class="form__input <?= (isset($errors['email']) ? 'form__input--error' : '' ); ?>" type="text" name="email" id="email" value="<?= htmlspecialchars(getPostVal("email")); ?>" placeholder="Введите e-mail">
 
                 <?php if (isset($errors['email'])): ?>
                 <p class="form__message">
@@ -24,7 +24,7 @@
             <div class="form__row">
               <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
-              <input class="form__input <?= ( isset($errors['password']) ? 'form__input--error' : '' ); ?>" type="password" name="password" id="password" value="" placeholder="Введите пароль">
+              <input class="form__input <?= (isset($errors['password']) ? 'form__input--error' : '' ); ?>" type="password" name="password" id="password" value="" placeholder="Введите пароль">
               <?php if (isset($errors["password"])): ?>
                   <p class="form__message">
                   <?= $errors["password"]; ?></p>
@@ -34,7 +34,7 @@
             <div class="form__row">
               <label class="form__label" for="name">Имя <sup>*</sup></label>
 
-              <input class="form__input <?= ( isset($errors['name']) ? 'form__input--error' : '' ); ?>" type="text" name="name" id="name" value="<?=htmlspecialchars($values['name']) ?? ''; ?>" placeholder="Введите имя">
+              <input class="form__input <?= (isset($errors['name']) ? 'form__input--error' : '' ); ?>" type="text" name="name" id="name" value="<?= htmlspecialchars(getPostVal("name")); ?>" placeholder="Введите имя">
               <?php if (isset($errors["name"])): ?>
                   <p class="form__message">
                   <?= $errors["name"]; ?></p>

@@ -8,7 +8,7 @@ if ( !isset( $_SESSION['user'] ) ) {
 }
 
 $user = $_SESSION['user'];
-$user_id = $_SESSION['user']['id'];
+$user_id = mysqli_real_escape_string($connect, $_SESSION['user']['id']);
 
 $sql = "SELECT * FROM user WHERE id= '$user_id'";
 $result = mysqli_query( $connect, $sql );
@@ -21,21 +21,19 @@ $projects_id = array_column( $projects, 'id' );
 $errors = [];
 
 if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-    $required = ['title', 'project', 'date'];
+    $required = ['title', 'project'];
 
     $rules = [
 
         'project' => function ( $task ) use ( $projects_id ) {
 
             return validateProject( intval( $task ), $projects_id );
-        }
-        ,
+        },
         'title' => function ( string $task ) {
             return validateLength( $task, 5, 100 );
-        }
-        ,
-        'date' => function ( $task ) {
-            return validateDate( $task );
+        },
+        'date' => function ($value) {
+            return validateDate($value);
         }
     ];
 
@@ -48,6 +46,8 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
     ];
 
     $task = filter_input_array( INPUT_POST, $fields, true );
+
+   
 
     foreach ( $task as $key => $value ) {
         if ( isset( $rules[$key] ) ) {
@@ -77,20 +77,27 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
     $errors = array_filter( $errors );
 
     if ( count( $errors ) ) {
-        $page_content = include_template( 'form-task.php',
-        [
-            'errors' => $errors,
-            'projects' => $projects,
-            'task' => $task,
+      if (!empty($task['date'])) 
+      {
+          $task['date'] = date_format(date_create($task['date']), 'Y.m.d'); 
+      }else {
+          $task['date'] = null;
+      }
+    $page_content = include_template( 'form-task.php',
+    [
+        'errors' => $errors,
+        'projects' => $projects,
+        'task' => $task,
 
-        ] );
-        $layout_content = include_template( 'layout.php', [
-            'content' => $page_content,
-            'users' => $users,
-            'title' => 'Дела в порядке | Добавление задачи'
-        ] );
-        print( $layout_content );
-        exit;
+    ] );
+    $layout_content = include_template( 'layout.php', [
+        'content' => $page_content,
+        'users' => $users,
+        'title' => 'Дела в порядке | Добавление задачи'
+    ] );
+    print( $layout_content );
+    exit;
+
     } else {
         $sql = "INSERT INTO task (creation_date, user_id, task_name, project_id, deadline, file_link, status) VALUES (NOW(), $user_id, ?, ?, ?, ?, 0)";
         $stmt = db_get_prepare_stmt( $connect, $sql, $task );
@@ -98,7 +105,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
         if ( !$result ) {
             $error = mysqli_error( $connect );
-            print( 'MySQL error: '. $errors );
+            print( $task );
         } else {
             header( 'Location: index.php' );
         }
@@ -116,4 +123,3 @@ $layout_content = include_template( 'layout.php', [
     'title' => 'Дела в порядке | Добавление задачи'
 ] );
 print( $layout_content );
-

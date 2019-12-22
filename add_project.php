@@ -8,8 +8,7 @@ if ( !isset( $_SESSION['user'] ) ) {
 }
 
 $user = $_SESSION['user'];
-$user_id = $_SESSION['user']['id'];
-
+$user_id = mysqli_real_escape_string($connect, $_SESSION['user']['id']);
 $sql = "SELECT * FROM user WHERE id= '$user_id'";
 $result = mysqli_query( $connect, $sql );
 $users = mysqli_fetch_assoc( $result );

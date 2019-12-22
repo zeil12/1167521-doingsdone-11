@@ -8,11 +8,12 @@ if ( isset( $_SESSION['user'] ) )  {
 }
 
 $errors = [];
-$tpl_data = [];
 $form = [];
 
 if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+    if (isset($_POST)) {
     $form = $_POST;
+    }
     $req_fields = ['email', 'password', 'name'];
 
     foreach ( $req_fields as $field ) {
@@ -36,7 +37,8 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
     if ( empty( $errors ) ) {
         $email = mysqli_real_escape_string( $connect, $form['email'] );
         $sql = "SELECT id FROM user WHERE email = '$email'";
-        $result = mysqli_query( $connect, $sql );
+        $result = mysqli_query( $connect, $sql);
+        
 
         if ( mysqli_num_rows( $result ) > 0 ) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
@@ -59,10 +61,11 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
 }
 
-$tpl_data['errors'] = $errors;
-$tpl_data['values'] = $form;
 
-$page_content = include_template( 'register.php', $tpl_data );
+$page_content = include_template( 'register.php', [
+     'form' => $form,
+     'errors' => $errors
+]);
 $layout_content = include_template( 'layout.php', [
     'content' => $page_content,
     'title' => 'Дела в порядке | Регистрация нового пользователя'

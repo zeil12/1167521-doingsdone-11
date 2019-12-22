@@ -1,6 +1,7 @@
 <?php
 
 function allProjects( $connect, $user_id ) {
+    $user_id = mysqli_real_escape_string($connect, $user_id);
     $sql = "SELECT p.title, p.id, p.user_id, COUNT(t.id) AS task_count FROM project p 
     LEFT JOIN task t ON t.project_id = p.id WHERE p.user_id = $user_id GROUP BY p.id";
     $result = mysqli_query( $connect, $sql );
@@ -14,6 +15,7 @@ function allProjects( $connect, $user_id ) {
 };
 
 function allTasks( $connect, $user_id ) {
+    $user_id = mysqli_real_escape_string($connect, $user_id);
     $sql = "SELECT id, creation_date, status, task_name, file_link, deadline, user_id, project_id 
     FROM task WHERE user_id = $user_id";
     $result = mysqli_query( $connect, $sql );
@@ -74,10 +76,9 @@ function idCheck($connect, $id) {
 };
 
 function userCheck( $connect, $user_id ) {
+    $user_id = mysqli_real_escape_string($connect, $user_id);
     $sql = "SELECT * FROM user WHERE id= '$user_id'";
-    $stmt = mysqli_prepare( $connect, $sql );
-    mysqli_stmt_execute( $stmt );
-    $result = mysqli_stmt_get_result( $stmt );
+    $result = mysqli_query( $connect, $sql );;
     if ( !$result ) {
         $error = mysqli_error( $connect );
         print ( 'MySQL error: ' . $error );
@@ -87,16 +88,16 @@ function userCheck( $connect, $user_id ) {
     return $users;
 };
 
-function changeTask( $connect, $taskId ) {
-    $sql = 'UPDATE task SET status=ABS(status-1) WHERE id=' . $taskId;
-    $stmt = mysqli_prepare( $connect, $sql );
-    mysqli_stmt_execute( $stmt );
-    $result = mysqli_stmt_get_result( $stmt );
+function changeTask( $connect, $task_id ) {
+    $task_id = mysqli_real_escape_string($connect, $task_id);
+    $sql = 'UPDATE task SET status=ABS(status-1) WHERE id=' . $task_id;
+    $result = mysqli_query( $connect, $sql );
     
     return $result;
 };
 
 function changeFilter( $connect, $filter, $user_id ) {
+    $user_id = mysqli_real_escape_string($connect, $user_id);
     if ( $_GET['filter'] === 'past' ) {
         $sql = "SELECT t.id, t.user_id, t.task_name, t.creation_date, t.deadline, t.status
           FROM task t
@@ -137,22 +138,11 @@ function getPostVal( $title ) {
     return filter_input( INPUT_POST, $title );
 };
 
-function validateFilled( string $title ) {
+function validateFilled($title ) {
     if ( empty( $_POST[$title] ) ) {
         
         return 'Это поле должно быть заполнено';
     }
-};
-
-function validateDate( string $date ) {
-    $currentDay = date( 'd.m.Y' );
-    $date = date_format( date_create( $date ), 'd.m.Y' );
-    if ( $date < $currentDay ) {
-        
-        return 'Дата должна быть больше или равна текущей';
-    }
-    
-    return null;
 };
 
 function validateProject( $id, $list ) {
@@ -180,6 +170,16 @@ function validateEmail( $email ) {
         return 'email введён некорректно';
     }
     
+    return null;
+};
+
+function validateDate(string $date)
+{
+    $currentDay = date('d.m.Y');
+    $date = date_format(date_create($date), 'd.m.Y');
+    if (strtotime($date) < strtotime($currentDay)) {
+        return 'Дата должна быть больше или равна текущей';
+    }
     return null;
 };
 

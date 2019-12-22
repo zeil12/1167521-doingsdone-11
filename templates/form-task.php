@@ -6,7 +6,7 @@
                     <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link <?php if($id === $project["id"]): ?>main-navigation__list-item--active <?php endif ?>" href="?project=<?=$project["id"]?>"><?=htmlspecialchars($project["title"]);?></a>
-                            <span class="main-navigation__list-item-count"><?= $project["task_count"]; ?></span>
+                            <span class="main-navigation__list-item-count"><?= htmlspecialchars($project["task_count"]); ?></span>
                         </li>
                     <?php endforeach; ?>
                     </ul>
@@ -50,7 +50,7 @@
           <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-<input class="form__input form__input--date <?php if (isset($errors["date"])): ?>form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?=htmlspecialchars(getPostVal('date')) ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+<input class="form__input form__input--date <?php if (isset($errors["date"])): ?>form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?= htmlspecialchars(getPostVal("date")) ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
             <?php if (isset($errors["date"])): ?>
                 <p class="form__message"><?= $errors["date"]; ?></p>
             <?php endif; ?>
