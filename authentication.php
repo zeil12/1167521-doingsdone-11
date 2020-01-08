@@ -1,58 +1,64 @@
 <?php
-require_once( 'helpers.php' );
-require_once( 'functions.php' );
-require( 'init.php' );
+require_once ('helpers.php');
+require_once ('functions.php');
+require ('init.php');
 
-if ( isset( $_SESSION['user'] ) )  {
-    header( 'location: index.php' );
+if (isset($_SESSION['user']))
+{
+    header('location: index.php');
 }
 
 $errors = [];
 $email = [];
 
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
+{
 
     $form = $_POST;
     $errors = [];
     $req_fields = ['email', 'password'];
 
-    foreach ( $req_fields as $field ) {
-        if ( empty( $form[$field] ) ) {
+    foreach ($req_fields as $field)
+    {
+        if (empty($form[$field]))
+        {
             $errors[$field] = 'Не заполнено поле ' . $field;
         }
     }
-    if ( !filter_var( $_POST['email'], FILTER_VALIDATE_EMAIL ) ) {
+    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+    {
         $errors['email'] = 'Введен неверный формат email';
-    } else {
-        $email = mysqli_real_escape_string( $connect, $form['email'] );
+    }
+    else
+    {
+        $email = mysqli_real_escape_string($connect, $form['email']);
         $sql = "SELECT * FROM user WHERE email= '$email'";
-        $result = mysqli_query( $connect, $sql );
+        $result = mysqli_query($connect, $sql);
 
-        if ( mysqli_num_rows( $result ) != 1 ) {
+        if (mysqli_num_rows($result) != 1)
+        {
             $errors['email'] = 'Данный email не найден в системе';
         }
     }
-    if ( empty( $errors ) ) {
+    if (empty($errors))
+    {
 
-        $users = mysqli_fetch_assoc( $result );
+        $users = mysqli_fetch_assoc($result);
 
-        if ( password_verify( $form['password'], $users['password'] ) ) {
+        if (password_verify($form['password'], $users['password']))
+        {
 
             $_SESSION['user'] = $users;
-            header( 'Location: index.php' );
-        } else {
+            header('Location: index.php');
+        }
+        else
+        {
             $errors['password'] = 'Неверно введен пароль';
         }
 
     }
 }
-$page_content = include_template( 'auth.php', [
-    'errors' => $errors,
-    'email' => $email
-] );
-$layout_content = include_template( 'layout.php', [
-    'content' => $page_content,
-    'title' => 'Дела в порядке | Вход на сайт'
-] );
-print( $layout_content );
+$page_content = include_template('auth.php', ['errors' => $errors, 'email' => $email]);
+$layout_content = include_template('layout.php', ['content' => $page_content, 'title' => 'Дела в порядке | Вход на сайт']);
+print ($layout_content);
 ?>
